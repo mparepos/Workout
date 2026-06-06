@@ -23,7 +23,7 @@ export default function WorkoutPage() {
   const [elapsed, setElapsed] = useState(0);
   const [done, setDone] = useState(false);
   const [finalTime, setFinalTime] = useState(0);
-  const sessionIdRef = useRef<string | null>(null);
+  const startedAtRef = useRef<string>('');
   const startTimeRef = useRef<number>(0);
 
   const steps = workout ? buildSteps(workout) : [];
@@ -36,20 +36,15 @@ export default function WorkoutPage() {
     return () => { lock?.release(); };
   }, []);
 
-  // Start session
+  // Start session – store started_at so we can match it on finish
   useEffect(() => {
     if (!workout) return;
     const now = Date.now();
     startTimeRef.current = now;
+    const startedAt = new Date(now).toISOString();
+    startedAtRef.current = startedAt;
 
-    supabase
-      .from('sessions')
-      .insert({ workout_id: id, started_at: new Date(now).toISOString() })
-      .select('id')
-      .single()
-      .then(({ data }) => {
-        if (data) sessionIdRef.current = data.id;
-      });
+    supabase.from('sessions').insert({ workout_id: id, started_at: startedAt });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Timer – recalculates from stored start time so app-switching is handled
@@ -68,15 +63,15 @@ export default function WorkoutPage() {
     const total = Date.now() - startTimeRef.current;
     setFinalTime(total);
 
-    if (sessionIdRef.current) {
-      await supabase
-        .from('sessions')
-        .update({ completed_at: new Date().toISOString() })
-        .eq('id', sessionIdRef.current);
-    }
+    // Match by workout_id + started_at so we don't need to track the session ID
+    await supabase
+      .from('sessions')
+      .update({ completed_at: new Date().toISOString() })
+      .eq('workout_id', id)
+      .eq('started_at', startedAtRef.current);
 
     setDone(true);
-  }, [stepIndex, steps.length]);
+  }, [stepIndex, steps.length, id]);
 
   if (!workout) {
     return (
@@ -123,8 +118,10 @@ export default function WorkoutPage() {
       <div className="flex items-center justify-between px-5 pt-12 pb-4">
         <button
           onClick={async () => {
-            if (sessionIdRef.current) {
-              await supabase.from('sessions').delete().eq('id', sessionIdRef.current);
+            if (startedAtRef.current) {
+              await supabase.from('sessions').delete()
+                .eq('workout_id', id)
+                .eq('started_at', startedAtRef.current);
             }
             router.push('/');
           }}
