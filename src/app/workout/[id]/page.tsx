@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getWorkout, buildSteps } from '@/lib/workouts';
 import ExerciseSVG from '@/components/ExerciseSVG';
-import { supabase } from '@/lib/supabase';
 
 function formatTime(ms: number): string {
   const s = Math.floor(ms / 1000);
@@ -23,8 +22,7 @@ export default function WorkoutPage() {
   const [elapsed, setElapsed] = useState(0);
   const [done, setDone] = useState(false);
   const [finalTime, setFinalTime] = useState(0);
-  const startedAtRef = useRef<string>('');
-  const startTimeRef = useRef<number>(0);
+  const startTimeRef = useRef<number>(Date.now());
 
   const steps = workout ? buildSteps(workout) : [];
 
@@ -36,42 +34,22 @@ export default function WorkoutPage() {
     return () => { lock?.release(); };
   }, []);
 
-  // Start session – store started_at so we can match it on finish
+  // Timer
   useEffect(() => {
-    if (!workout) return;
-    const now = Date.now();
-    startTimeRef.current = now;
-    const startedAt = new Date(now).toISOString();
-    startedAtRef.current = startedAt;
-
-    supabase.from('sessions').insert({ workout_id: id, started_at: startedAt });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Timer – recalculates from stored start time so app-switching is handled
-  useEffect(() => {
+    startTimeRef.current = Date.now();
     const tick = () => setElapsed(Date.now() - startTimeRef.current);
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
   }, []);
 
-  const handleNext = useCallback(async () => {
+  const handleNext = useCallback(() => {
     if (stepIndex < steps.length - 1) {
       setStepIndex((i) => i + 1);
       return;
     }
-
-    const total = Date.now() - startTimeRef.current;
-    setFinalTime(total);
-
-    // Match by workout_id + started_at so we don't need to track the session ID
-    await supabase
-      .from('sessions')
-      .update({ completed_at: new Date().toISOString() })
-      .eq('workout_id', id)
-      .eq('started_at', startedAtRef.current);
-
+    setFinalTime(Date.now() - startTimeRef.current);
     setDone(true);
-  }, [stepIndex, steps.length, id]);
+  }, [stepIndex, steps.length]);
 
   if (!workout) {
     return (
@@ -114,17 +92,9 @@ export default function WorkoutPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col">
-      {/* Header */}
       <div className="flex items-center justify-between px-5 pt-12 pb-4">
         <button
-          onClick={async () => {
-            if (startedAtRef.current) {
-              await supabase.from('sessions').delete()
-                .eq('workout_id', id)
-                .eq('started_at', startedAtRef.current);
-            }
-            router.push('/');
-          }}
+          onClick={() => router.push('/')}
           className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 active:bg-gray-700"
           aria-label="Exit workout"
         >
@@ -140,7 +110,6 @@ export default function WorkoutPage() {
         </span>
       </div>
 
-      {/* Progress bar */}
       <div className="px-5 mb-6">
         <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
           <div
@@ -150,7 +119,6 @@ export default function WorkoutPage() {
         </div>
       </div>
 
-      {/* Superset + set info */}
       <div className="px-5 mb-2 flex items-center gap-2">
         <span className="text-xs font-semibold uppercase tracking-widest text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-full">
           {superset.label}
@@ -164,20 +132,17 @@ export default function WorkoutPage() {
         <p className="px-5 mb-2 text-xs text-gray-600 italic">{superset.notes}</p>
       )}
 
-      {/* Exercise name + reps */}
       <div className="px-5 mb-6">
         <h2 className="text-2xl font-bold leading-tight">{exercise.name}</h2>
         <p className="text-orange-400 text-lg font-semibold mt-1">{exercise.repRange} reps</p>
       </div>
 
-      {/* SVG illustration */}
       <div className="flex-1 flex items-center justify-center px-6">
         <div className="opacity-90">
           <ExerciseSVG exerciseKey={exercise.key} />
         </div>
       </div>
 
-      {/* Next button */}
       <div className="px-5 pb-12 pt-6">
         <button
           onClick={handleNext}
