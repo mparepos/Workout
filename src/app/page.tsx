@@ -6,6 +6,7 @@ const emphasisColors: Record<string, string> = {
   B: 'text-sky-400',
   C: 'text-emerald-400',
   D: 'text-violet-400',
+  E: 'text-rose-400',
 };
 
 const borderColors: Record<string, string> = {
@@ -13,6 +14,7 @@ const borderColors: Record<string, string> = {
   B: 'border-sky-500/30 hover:border-sky-500',
   C: 'border-emerald-500/30 hover:border-emerald-500',
   D: 'border-violet-500/30 hover:border-violet-500',
+  E: 'border-rose-500/30 hover:border-rose-500',
 };
 
 export default function HomePage() {
@@ -43,7 +45,7 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-2">
               {workout.supersets.map((ss) => (
                 <span key={ss.label} className="text-xs bg-gray-800 text-gray-400 rounded-lg px-2 py-1">
-                  {ss.exercises[0].name.split(' ').slice(0, 2).join(' ')} + {ss.exercises[1].name.split(' ').slice(0, 2).join(' ')}
+                  {ss.exercises[0].name} + {ss.exercises[1].name}
                 </span>
               ))}
             </div>
