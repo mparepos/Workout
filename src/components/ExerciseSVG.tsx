@@ -37,6 +37,12 @@ const keyToScene: Record<string, string> = {
   D_S2_B: 'tricep-kickbacks',
   D_S3_A: 'calf-raises',
   D_S3_B: 'decline-crunches',
+  E_S1_A: 'hip-thrusts',
+  E_S1_B: 'superman',
+  E_S2_A: 'shrugs',
+  E_S2_B: 'rear-delt-flyes',
+  E_S3_A: 'woodchops',
+  E_S3_B: 'side-bends',
 };
 
 function GobletSquat() {
@@ -463,6 +469,139 @@ function DeclineCrunches() {
   );
 }
 
+function HipThrusts() {
+  return (
+    <>
+      {/* bench behind (shoulders resting on it) */}
+      <line x1="10" y1="55" x2="70" y2="55" stroke={BENCH} strokeWidth="6" strokeLinecap="round" />
+      {/* head */}
+      <circle cx="22" cy="44" r="9" fill="none" stroke={W} strokeWidth="3" strokeLinecap="round" />
+      {/* torso – elevated, horizontal */}
+      <line x1="30" y1="52" x2="78" y2="58" {...sw} />
+      {/* dumbbell on hips */}
+      <rect x="54" y="52" width="20" height="10" rx="3" fill={OR} />
+      {/* arms bracing on bench */}
+      <line x1="30" y1="54" x2="18" y2="60" {...sw} />
+      <line x1="50" y1="55" x2="52" y2="62" {...sw} />
+      {/* left leg – knee bent, foot on floor */}
+      <line x1="78" y1="58" x2="88" y2="85" {...sw} />
+      <line x1="88" y1="85" x2="72" y2="110" {...sw} />
+      {/* right leg */}
+      <line x1="75" y1="60" x2="84" y2="88" {...sw} />
+      <line x1="84" y1="88" x2="68" y2="112" {...sw} />
+      {/* floor */}
+      <line x1="10" y1="118" x2="110" y2="118" stroke="#374151" strokeWidth="2" strokeLinecap="round" />
+    </>
+  );
+}
+
+function Superman() {
+  return (
+    <>
+      {/* floor/mat */}
+      <line x1="10" y1="90" x2="110" y2="90" stroke="#374151" strokeWidth="2" strokeLinecap="round" />
+      {/* body lying face down, lifted */}
+      {/* head raised */}
+      <circle cx="90" cy="68" r="9" fill="none" stroke={W} strokeWidth="3" strokeLinecap="round" />
+      {/* torso */}
+      <line x1="82" y1="74" x2="35" y2="78" {...sw} />
+      {/* arms extended forward and up */}
+      <line x1="82" y1="72" x2="108" y2="58" {...sw} />
+      <line x1="82" y1="76" x2="108" y2="65" {...sw} />
+      {/* legs extended back and up */}
+      <line x1="35" y1="76" x2="10" y2="65" {...sw} />
+      <line x1="35" y1="80" x2="10" y2="72" {...sw} />
+      {/* motion lines */}
+      <line x1="60" y1="86" x2="60" y2="92" stroke={OR} strokeWidth="2" strokeLinecap="round" />
+      <line x1="50" y1="87" x2="50" y2="93" stroke={OR} strokeWidth="2" strokeLinecap="round" />
+      <line x1="70" y1="87" x2="70" y2="93" stroke={OR} strokeWidth="2" strokeLinecap="round" />
+    </>
+  );
+}
+
+function Shrugs() {
+  return (
+    <>
+      <circle cx="60" cy="18" r="10" fill="none" stroke={W} strokeWidth="3" strokeLinecap="round" />
+      {/* shoulders raised high */}
+      <line x1="60" y1="28" x2="60" y2="68" {...sw} />
+      {/* arms hanging straight down with weights */}
+      <line x1="60" y1="34" x2="38" y2="65" {...sw} />
+      <line x1="60" y1="34" x2="82" y2="65" {...sw} />
+      <circle cx="37" cy="70" r="7" fill={OR} />
+      <circle cx="83" cy="70" r="7" fill={OR} />
+      {/* shoulder raise indicators */}
+      <line x1="42" y1="30" x2="38" y2="24" stroke={OR} strokeWidth="2" strokeLinecap="round" />
+      <line x1="78" y1="30" x2="82" y2="24" stroke={OR} strokeWidth="2" strokeLinecap="round" />
+      {/* legs */}
+      <line x1="60" y1="68" x2="50" y2="100" {...sw} />
+      <line x1="50" y1="100" x2="48" y2="126" {...sw} />
+      <line x1="60" y1="68" x2="70" y2="100" {...sw} />
+      <line x1="70" y1="100" x2="72" y2="126" {...sw} />
+    </>
+  );
+}
+
+function RearDeltFlyes() {
+  return (
+    <>
+      {/* incline bench */}
+      <line x1="12" y1="122" x2="98" y2="62" stroke={BENCH} strokeWidth="6" strokeLinecap="round" />
+      {/* head – face down on bench */}
+      <circle cx="90" cy="54" r="8" fill="none" stroke={W} strokeWidth="3" strokeLinecap="round" />
+      {/* body along bench */}
+      <line x1="82" y1="62" x2="32" y2="105" {...sw} />
+      {/* arms extended out wide to sides */}
+      <line x1="65" y1="72" x2="42" y2="50" {...sw} />
+      <line x1="55" y1="76" x2="32" y2="54" {...sw} />
+      <circle cx="38" cy="46" r="6" fill={OR} />
+      <circle cx="28" cy="50" r="6" fill={OR} />
+    </>
+  );
+}
+
+function Woodchops() {
+  return (
+    <>
+      <circle cx="60" cy="18" r="10" fill="none" stroke={W} strokeWidth="3" strokeLinecap="round" />
+      {/* torso rotated */}
+      <line x1="60" y1="28" x2="58" y2="68" {...sw} />
+      {/* arms swinging diagonal – high to low */}
+      <line x1="58" y1="40" x2="82" y2="22" {...sw} />
+      <line x1="82" y1="22" x2="88" y2="38" {...sw} />
+      {/* dumbbell at top */}
+      <rect x="84" y="14" width="14" height="10" rx="2" fill={OR} />
+      {/* motion arc */}
+      <line x1="70" y1="52" x2="38" y2="72" stroke={OR} strokeWidth="2" strokeLinecap="round" strokeDasharray="4 3" />
+      {/* legs – wide stance */}
+      <line x1="58" y1="68" x2="42" y2="100" {...sw} />
+      <line x1="42" y1="100" x2="38" y2="128" {...sw} />
+      <line x1="58" y1="68" x2="74" y2="100" {...sw} />
+      <line x1="74" y1="100" x2="78" y2="128" {...sw} />
+    </>
+  );
+}
+
+function SideBends() {
+  return (
+    <>
+      <circle cx="60" cy="18" r="10" fill="none" stroke={W} strokeWidth="3" strokeLinecap="round" />
+      {/* torso bending to one side */}
+      <line x1="60" y1="28" x2="72" y2="68" {...sw} />
+      {/* working arm – dumbbell hanging low on bent side */}
+      <line x1="60" y1="40" x2="80" y2="62" {...sw} />
+      <circle cx="83" cy="67" r="7" fill={OR} />
+      {/* other arm – raised on opposite side */}
+      <line x1="60" y1="40" x2="42" y2="30" {...sw} />
+      {/* legs */}
+      <line x1="72" y1="68" x2="60" y2="100" {...sw} />
+      <line x1="60" y1="100" x2="58" y2="128" {...sw} />
+      <line x1="72" y1="68" x2="84" y2="100" {...sw} />
+      <line x1="84" y1="100" x2="86" y2="128" {...sw} />
+    </>
+  );
+}
+
 const sceneMap: Record<string, React.ReactNode> = {
   'goblet-squat': <GobletSquat />,
   'incline-bench': <InclineBench />,
@@ -484,6 +623,12 @@ const sceneMap: Record<string, React.ReactNode> = {
   'tricep-kickbacks': <TricepKickbacks />,
   'calf-raises': <CalfRaises />,
   'decline-crunches': <DeclineCrunches />,
+  'hip-thrusts': <HipThrusts />,
+  'superman': <Superman />,
+  'shrugs': <Shrugs />,
+  'rear-delt-flyes': <RearDeltFlyes />,
+  'woodchops': <Woodchops />,
+  'side-bends': <SideBends />,
 };
 
 export default function ExerciseSVG({ exerciseKey }: { exerciseKey: string }) {
