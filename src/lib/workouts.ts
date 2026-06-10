@@ -12,7 +12,7 @@ export type Superset = {
 };
 
 export type Workout = {
-  id: 'A' | 'B' | 'C' | 'D';
+  id: 'A' | 'B' | 'C' | 'D' | 'E';
   name: string;
   emphasis: string;
   supersets: Superset[];
@@ -129,6 +129,34 @@ export const WORKOUTS: Workout[] = [
         exercises: [
           { key: 'D_S3_A', name: 'Standing Calf Raises', sets: 3, repRange: '15' },
           { key: 'D_S3_B', name: 'Decline Crunches / Plank', sets: 3, repRange: 'To failure' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'E',
+    name: 'Workout E',
+    emphasis: 'Posterior Chain & Core',
+    supersets: [
+      {
+        label: 'Superset 1',
+        exercises: [
+          { key: 'E_S1_A', name: 'Dumbbell Hip Thrusts', sets: 3, repRange: '10–12' },
+          { key: 'E_S1_B', name: 'Superman Hold', sets: 3, repRange: '12–15' },
+        ],
+      },
+      {
+        label: 'Superset 2',
+        exercises: [
+          { key: 'E_S2_A', name: 'Dumbbell Shrugs', sets: 3, repRange: '12–15' },
+          { key: 'E_S2_B', name: 'Incline Dumbbell Rear Delt Flyes', sets: 3, repRange: '15' },
+        ],
+      },
+      {
+        label: 'Superset 3',
+        exercises: [
+          { key: 'E_S3_A', name: 'Dumbbell Woodchops', sets: 3, repRange: '12/side' },
+          { key: 'E_S3_B', name: 'Dumbbell Side Bends', sets: 3, repRange: '15/side' },
         ],
       },
     ],
